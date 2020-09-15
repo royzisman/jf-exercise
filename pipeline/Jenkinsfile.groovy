@@ -2,10 +2,11 @@ pipeline {
     agent any
     stages {
         stage ('init') {
-            script {
-                def pom = readMavenPom file: 'pom.xml'
-            }
+
             steps {
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                }
                 sh '''
                     echo APPLICATION=${pom.artifactId}:${pom.version}
                     echo "PATH = ${PATH}"
