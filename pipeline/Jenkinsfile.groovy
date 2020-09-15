@@ -1,5 +1,12 @@
 pipeline {
-    agent any
+    environment {
+        imageName = "etingertal/jf-exercise"
+        registryCredential = 'etingertal-dockerhub'
+        dockerImage = ''
+    }
+    agent {
+        label 'docker'
+    }
     tools {
         maven 'mvn-3.6.3'
         jdk 'jdk-11'
@@ -39,13 +46,19 @@ pipeline {
 
         stage ('build docker image') {
             steps {
-                sh 'docker build -t etingertal/jf-exercise .'
+                script {
+                    dockerImage = docker.build imageName
+                }
             }
         }
 
         stage ('push docker image') {
             steps {
-                sh 'docker push etingertal/jf-exercise'
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push("$BUILD_NUMBER")
+                        dockerImage.push('latest')
+                }
             }
         }
     }
