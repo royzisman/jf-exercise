@@ -16,6 +16,9 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     env.ARTIFACT = pom.artifactId // Needs Jenkins admin approval
+
+                    def dockerHome = tool 'docker'
+                    env.PATH = "${dockerHome}/bin:${env.PATH}"
                 }
                 sh '''
                     echo "ARTIFACT_ID=${ARTIFACT}"
