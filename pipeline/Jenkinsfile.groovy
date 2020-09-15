@@ -8,7 +8,7 @@ pipeline {
                     def pom = readMavenPom file: 'pom.xml'
                 }
                 sh '''
-                    echo APPLICATION=${pom.artifactId}:${pom.version}
+                    echo "APPLICATION=${pom.artifactId}:${pom.version}"
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
                 '''
