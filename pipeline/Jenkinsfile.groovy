@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage ('init') {
             steps {
-                pom = readMavenPom file: 'pom.xml'
+                def pom = readMavenPom file: 'pom.xml'
                 sh '''
                     echo APPLICATION=${pom.artifactId}:${pom.version}
                     echo "PATH = ${PATH}"
