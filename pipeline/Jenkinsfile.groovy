@@ -15,14 +15,12 @@ pipeline {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    env.ARTIFACT = pom.artifactId // Needs Jenkins admin approval
-                    env.PATH = "${env.PATH}:/usr/local/bin/"
-                }
-                sh '''
-                    echo "ARTIFACT_ID=${ARTIFACT}"
+                    env.PATH = "${env.PATH}:/usr/local/bin/" // Ensure docker inside there
+
+                    echo "ARTIFACT_ID=${pom.artifactId}"
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
-                '''
+                }
             }
         }
 
