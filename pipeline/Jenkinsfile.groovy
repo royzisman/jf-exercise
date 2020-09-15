@@ -1,12 +1,16 @@
 pipeline {
     agent any
+    tools {
+        maven 'mvn-3.6.3'
+        jdk 'jdk-11'
+    }
     stages {
         stage ('init') {
 
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    env.ARTIFACT = pom.artifactId
+                    env.ARTIFACT = pom.artifactId // Needs Jenkins admin approval
                 }
                 sh '''
                     echo "ARTIFACT_ID=${ARTIFACT}"
