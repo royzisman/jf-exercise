@@ -4,9 +4,7 @@ pipeline {
         registryCredential = 'etingertal-dockerhub'
         dockerImage = ''
     }
-    agent {
-        label 'docker'
-    }
+    agent any
     tools {
         maven 'mvn-3.6.3'
         jdk 'jdk-11'
