@@ -6,9 +6,10 @@ pipeline {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT = pom.artifactId
                 }
                 sh '''
-                    echo "APPLICATION=${pom.artifactId}:${pom.version}"
+                    echo "ARTIFACT_ID=${ARTIFACT}"
                     echo "PATH = ${PATH}"
                     echo "M2_HOME = ${M2_HOME}"
                 '''
