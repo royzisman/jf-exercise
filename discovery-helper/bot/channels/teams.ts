@@ -34,6 +34,17 @@ function continuationToken(meetingId: string, participantId: string): string {
   return `meeting:${slug(meetingId)}:participant:${slug(participantId)}`;
 }
 
+function readSnapshot(result: unknown): { addedCount: number; tagged: boolean } | undefined {
+  if (!result || typeof result !== "object") {
+    return undefined;
+  }
+  const record = result as { addedCount?: unknown; tagged?: unknown };
+  if (typeof record.addedCount !== "number") {
+    return undefined;
+  }
+  return { addedCount: record.addedCount, tagged: record.tagged === true };
+}
+
 export default defineChannel<TeamsState>({
   ...(token ? { auth: [bearerAuth(token)] } : {}),
   state: {
@@ -65,6 +76,13 @@ export default defineChannel<TeamsState>({
           lines,
         });
 
+        const closing = body.final === true;
+        const snapshot = prepared.isError ? undefined : readSnapshot(prepared.result);
+        // A caption feed often resends lines we already stored. Do not spend a turn on that.
+        if (!prepared.isError && snapshot && snapshot.addedCount === 0 && !snapshot.tagged && !closing) {
+          return new Response(null, { status: 202 });
+        }
+
         const state: TeamsState = {
           meetingId: slug(body.meetingId),
           participantId: slug(body.participantId),
@@ -73,7 +91,6 @@ export default defineChannel<TeamsState>({
         };
         const tokenKey = continuationToken(body.meetingId, body.participantId);
         const title = `Discovery · ${body.participantName}`;
-        const closing = body.final === true;
 
         const message = prepared.isError
           ? prompt`

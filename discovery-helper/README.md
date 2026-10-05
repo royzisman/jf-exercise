@@ -37,7 +37,7 @@ curl -sS -X POST http://127.0.0.1:3000/v1/channels/teams/transcript \
 
 The route answers `202` and starts a coaching turn. The same `meetingId` and `participantId` stay on one session, titled `Discovery · {name}`. Watch that session in the playground.
 
-Send several cues as `lines`: `{ "speaker", "text", "spokenAt?", "questionId?" }`. Posting the same line again does not duplicate it.
+Send several cues as `lines`: `{ "speaker", "text", "spokenAt?", "questionId?" }`. Posting the same line again does not duplicate it, and it does not start another coaching turn. `"final": true` still closes the interview when the last post is a repeat.
 
 End the interview with `"final": true`. The agent closes that person's note and refreshes the campaign synthesis.
 
